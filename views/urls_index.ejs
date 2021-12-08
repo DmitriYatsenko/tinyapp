@@ -28,7 +28,7 @@
                     <td><%= urls[url] %></td>
                     <td>
                         <form method="POST" action="/urls/<%= url %>/delete">
-                            <input type = "hidden" value = "<%= url %>">
+                            <input type = "hidden" value = "<%= url %>" name = "my_URL">
                             <button type="submit" >DELETE</button>
                         </form>
                     </td>
