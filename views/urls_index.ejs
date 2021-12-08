@@ -26,7 +26,12 @@
                 <tr>
                     <td><%= url %></td>
                     <td><%= urls[url] %></td>
-                    <td><form method="POST" action="/urls/<%= url %>/delete"><button type="submit">DELETE</button></form></td>
+                    <td>
+                        <form method="POST" action="/urls/<%= url %>/delete">
+                            <input type = "hidden" value = "<%= url %>">
+                            <button type="submit" >DELETE</button>
+                        </form>
+                    </td>
                 </tr>
                 <% } %>
             </tbody>
@@ -43,4 +48,5 @@
         integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
         crossorigin="anonymous"></script>
 </body>
+
 </html>
