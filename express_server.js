@@ -88,8 +88,25 @@ app.post("/login", (req, res) => {
 });
 
 app.post("/logout", (req, res) => {
-    const username = "";
+    res.clearCookie('username');
+    res.clearCookie('email');
+    res.clearCookie('password');
+    res.redirect(`/urls`);
+});
+
+app.get("/register", (req, res) => {
+    const templateVars = { username: req.cookies["username"], email: req.cookies["email"], password: req.cookies["password"] };
+    res.render("urls_show", templateVars);
+    //res.redirect("/urls");
+});
+
+app.post("/register", (req, res) => {
+    const username = req.body.username;
+    const email = req.body.email;
+    const password = req.body.password;
     res.cookie('username', username);
+    res.cookie('email', email);
+    res.cookie('password', password);
     res.redirect(`/urls`);
 });
 
