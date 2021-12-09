@@ -83,7 +83,11 @@ app.get("/hello", (req, res) => {
 
 app.post("/login", (req, res) => {
     const username = req.body.username;
+    const email = req.body.email;
+    const password = req.body.password;
     res.cookie('username', username);
+    res.cookie('email', email);
+    res.cookie('password', password);
     res.redirect(`/urls`);
 });
 
