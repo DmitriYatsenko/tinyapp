@@ -11,9 +11,9 @@
                 <a class="nav-item nav-link" href="/urls/new">Create New URL</a>
             </div>
 
-            <% if(username) { %>
+            <% if(user) { %>
             <div class="navbar-nav">
-                <p class="nav-item">Logged in as <%= username %></p>
+                <p class="nav-item">Logged in as <%= user.email %></p>
             </div>
             <form class="form-check" action="/logout" method="POST">
                 <button type="submit" class="btn btn-primary">Logout</button>
@@ -21,8 +21,6 @@
             <% } else { %>
             <form class="form-check" action="/login" method="POST">
                 <div class="form-group mb-2">
-                    <input class="form-control" type="text" name="username" placeholder="username"
-                        style="width: 200px; margin-left:auto; margin-right: auto;">
                     <input class="form-control" type="text" name="email" placeholder="email"
                         style="width: 200px; margin-left:auto; margin-right: auto;">
                     <input class="form-control" type="text" name="password" placeholder="password"
@@ -30,17 +28,7 @@
                     <button type="submit" class="btn btn-primary">Login</button>
                 </div>
             </form>
-            <form class="form-check" action="/register" method="POST">
-                <div class="form-group mb-2">
-                    <input class="form-control" type="text" name="username" placeholder="username"
-                        style="width: 200px; margin-left:auto; margin-right: auto;">
-                    <input class="form-control" type="text" name="email" placeholder="email"
-                        style="width: 200px; margin-left:auto; margin-right: auto;">
-                    <input class="form-control" type="text" name="password" placeholder="password"
-                        style="width: 200px; margin-left:auto; margin-right: auto;">
-                    <button type="submit" class="btn btn-primary">Register</button>
-                </div>
-            </form>
+            <a href="/register"><button type="submit" class="btn btn-primary">Register</button></a>
             <% } %>
         </div>
     </nav>
