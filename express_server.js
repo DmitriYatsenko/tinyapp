@@ -118,38 +118,6 @@ app.get("/hello", (req, res) => {
     res.send("<html><body>Hello <b>World</b></body></html>\n");
 });
 
-app.post("/login", (req, res) => {
-    const email = req.body.email;
-    const password = req.body.password;
-
-    let correct = false;
-    let userID;
-    for (let user in users) {
-        if (users[user].email === email && users[user].password === password) {
-            correct = true;
-            userID = users[user].id;
-        }
-    }
-    if (correct) {
-        res.cookie('user_id', userID);
-        setTimeout(() => {
-            res.redirect(`/urls`);
-        }, 1000);
-    } else {
-        res.send("Login in4m8n incorrect");
-        // setTimeout(() => {
-        //     res.redirect(`/urls`);
-        // }, 1000);
-    }
-});
-
-app.post("/logout", (req, res) => {
-    res.clearCookie('user_id');
-    //setTimeout(() => {
-    res.redirect(`/urls`);
-    //}, 1000);
-});
-
 app.get("/register", (req, res) => {
     const templateVars = { user: users[req.cookies.user_id] };
     res.render("register", templateVars);
@@ -196,6 +164,43 @@ app.post("/register", (req, res) => {
             res.redirect(`/urls`);
         }, 1000);
     }
+});
+
+app.get("/login", (req, res) => {
+    const templateVars = { user: users[req.cookies.user_id] };
+    res.render("login", templateVars);
+});
+
+app.post("/login", (req, res) => {
+    const email = req.body.email;
+    const password = req.body.password;
+
+    let correct = false;
+    let userID;
+    for (let user in users) {
+        if (users[user].email === email && users[user].password === password) {
+            correct = true;
+            userID = users[user].id;
+        }
+    }
+    if (correct) {
+        res.cookie('user_id', userID);
+        //setTimeout(() => {
+            res.redirect(`/urls`);
+        //}, 1000);
+    } else {
+        res.send("Login in4m8n incorrect");
+        // setTimeout(() => {
+        //     res.redirect(`/urls`);
+        // }, 1000);
+    }
+});
+
+app.post("/logout", (req, res) => {
+    res.clearCookie('user_id');
+    //setTimeout(() => {
+    res.redirect(`/urls`);
+    //}, 1000);
 });
 
 app.listen(PORT, () => {

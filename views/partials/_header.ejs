@@ -19,15 +19,7 @@
                 <button type="submit" class="btn btn-primary">Logout</button>
             </form>
             <% } else { %>
-            <form class="form-check" action="/login" method="POST">
-                <div class="form-group mb-2">
-                    <input class="form-control" type="text" name="email" placeholder="email"
-                        style="width: 200px; margin-left:auto; margin-right: auto;">
-                    <input class="form-control" type="text" name="password" placeholder="password"
-                        style="width: 200px; margin-left:auto; margin-right: auto;">
-                    <button type="submit" class="btn btn-primary">Login</button>
-                </div>
-            </form>
+            <a href="/login"><button type="submit" class="btn btn-primary">Login</button></a>
             <a href="/register"><button type="submit" class="btn btn-primary">Register</button></a>
             <% } %>
         </div>
