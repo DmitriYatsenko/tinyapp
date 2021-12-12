@@ -33,6 +33,16 @@ function userURLs(urlDatabase, user_id) {
     return urlSubDatabase;
 }
 
+const getUserByEmail = function (email, database) {
+    let user;
+    for (let users in database) {
+        if (database[users].email === email) {
+            user = users;
+        }
+    }
+    return user;
+};
+
 app.get("/", (req, res) => {
     res.send("Hello!");
 });
@@ -114,13 +124,13 @@ app.post("/register", (req, res) => {
     let newUserEmail = req.body.email;
     let newUserPassword = req.body.password;
 
-    let userExists = false;
-    for (let user in users) {
-        if (users[user].email === newUserEmail) {
-            userExists = true;
-        }
-    }
-    if (userExists) {
+    // let userExists = false;
+    // for (let user in users) {
+    //     if (users[user].email === newUserEmail) {
+    //         userExists = true;
+    //     }
+    // }
+    if (getUserByEmail(newUserEmail, users)) {
         res.send("Email already in use");
     } else {
         let userIDexists = false;
