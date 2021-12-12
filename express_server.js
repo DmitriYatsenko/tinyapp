@@ -1,6 +1,7 @@
 const express = require("express");
 const app = express();
 const bcrypt = require('bcryptjs');
+const getUserByEmail = require('./helpers');
 const PORT = 8080;
 const users = {};
 const urlDatabase = {};
@@ -32,16 +33,6 @@ function userURLs(urlDatabase, user_id) {
     }
     return urlSubDatabase;
 }
-
-const getUserByEmail = function (email, database) {
-    let user;
-    for (let users in database) {
-        if (database[users].email === email) {
-            user = users;
-        }
-    }
-    return user;
-};
 
 app.get("/", (req, res) => {
     res.send("Hello!");
