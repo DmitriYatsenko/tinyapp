@@ -1,5 +1,6 @@
 const express = require("express");
 const app = express();
+const bcrypt = require('bcryptjs');
 const PORT = 8080;
 const users = {};
 const urlDatabase = {};
@@ -132,7 +133,7 @@ app.post("/register", (req, res) => {
         users[newUserID] = {
             id: newUserID,
             email: newUserEmail,
-            password: newUserPassword
+            password: bcrypt.hashSync(newUserPassword, 10)
         };
 
         res.cookie('user_id', newUserID);
@@ -154,7 +155,7 @@ app.post("/login", (req, res) => {
     let correct = false;
     let userID;
     for (let user in users) {
-        if (users[user].email === email && users[user].password === password) {
+        if (users[user].email === email && bcrypt.compareSync(password, users[user].password)) {
             correct = true;
             userID = users[user].id;
         }
