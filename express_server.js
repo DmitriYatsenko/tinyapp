@@ -14,6 +14,7 @@ app.use(cookieSession({
 }))
 app.set("view engine", "ejs");
 
+// List of acceptable characters (numbers & letters) to generate random user IDs
 function generateRandomString() {
     let characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
     let string = "";
@@ -25,6 +26,7 @@ function generateRandomString() {
 }
 
 function userURLs(urlDatabase, user_id) {
+    // For logged in user, only show the short URLs they created, not other users' URLs
     let urlSubDatabase = {};
     for (let shortURL in urlDatabase) {
         if (urlDatabase[shortURL].user_id === user_id) {
@@ -43,6 +45,7 @@ app.get("/urls", (req, res) => {
         user: users[req.session.user_id],
         urls: userURLs(urlDatabase, req.session.user_id)
     };
+    // Check if user is logged in
     if (req.session.user_id) {
         res.render("urls_index", templateVars);
     } else {
@@ -51,6 +54,7 @@ app.get("/urls", (req, res) => {
 });
 
 app.post("/urls", (req, res) => {
+    // Check if user is logged in
     if (req.session.user_id) {
         const longURL = req.body.longURL;
         const shortURL = generateRandomString();
@@ -66,6 +70,7 @@ app.get("/urls/new", (req, res) => {
         urls: urlDatabase,
         user: users[req.session.user_id]
     };
+    // Check if user is logged in
     if (templateVars.user) {
         res.render("urls_new", templateVars);
     } else {
@@ -80,6 +85,7 @@ app.get("/urls/:shortURL", (req, res) => {
         user: users[req.session.user_id],
         correct: urlDatabase[req.params.shortURL].user_id === req.session.user_id
     };
+    // Check if user is logged in
     if (templateVars.user) {
         res.render("urls_show", templateVars);
     } else {
@@ -88,6 +94,7 @@ app.get("/urls/:shortURL", (req, res) => {
 });
 
 app.post("/urls/:shortURL", (req, res) => {
+    // Check if user is logged in
     if (req.session.user_id) {
         const shortURL = req.params.shortURL;
         const longURL = req.body.longURL;
@@ -99,6 +106,7 @@ app.post("/urls/:shortURL", (req, res) => {
 });
 
 app.post("/urls/:shortURL/delete", (req, res) => {
+    // Check if user is logged in
     if (req.session.user_id) {
         const shortURL = req.body.my_URL;
         delete urlDatabase[shortURL];
@@ -109,6 +117,7 @@ app.post("/urls/:shortURL/delete", (req, res) => {
 });
 
 app.get("/u/:shortURL", (req, res) => {
+    // Redirect to webpage for which the shortURL was created
     const longURL = urlDatabase[req.params.shortURL].longURL;
     res.redirect(longURL);
 });
@@ -122,6 +131,7 @@ app.get("/hello", (req, res) => {
 });
 
 app.get("/register", (req, res) => {
+    // Check if user is logged in
     if (req.session.user_id) {
         res.redirect(`/urls`);
     }
@@ -130,6 +140,7 @@ app.get("/register", (req, res) => {
 });
 
 app.post("/register", (req, res) => {
+    // User ID automatically randomly generated, email & password taken from user input
     let newUserID = Math.round(1000000000 * Math.random());
     let newUserEmail = req.body.email;
     let newUserPassword = req.body.password;
@@ -150,9 +161,14 @@ app.post("/register", (req, res) => {
             }
         }
         while (userIDexists) {
+            /*
+            Just in case the randomly generated user ID is already in use (astronomically unlikely)
+            the program will regenerate a different user ID
+            */
             newUserID = Math.round(1000000000 * Math.random());
         }
 
+        // Add new user to database
         users[newUserID] = {
             id: newUserID,
             email: newUserEmail,
@@ -160,8 +176,6 @@ app.post("/register", (req, res) => {
         };
 
         req.session.user_id = newUserID;
-        // let a1 = req.session.user_id;
-        // res.cookie('user_id', a1);
         setTimeout(() => {
             res.redirect(`/urls`);
         }, 1000);
@@ -169,6 +183,7 @@ app.post("/register", (req, res) => {
 });
 
 app.get("/login", (req, res) => {
+    // Check if user is logged in
     if (req.session.user_id) {
         res.redirect(`/urls`);
     }
@@ -177,9 +192,11 @@ app.get("/login", (req, res) => {
 });
 
 app.post("/login", (req, res) => {
+    // Get user input
     const email = req.body.email;
     const password = req.body.password;
 
+    // Check if login correct
     let correct = false;
     let userID;
     for (let user in users) {
@@ -189,7 +206,6 @@ app.post("/login", (req, res) => {
         }
     }
     if (correct) {
-        // res.session('user_id', userID);
         req.session.user_id = userID;
         res.redirect(`/urls`);
     } else {
@@ -198,6 +214,7 @@ app.post("/login", (req, res) => {
 });
 
 app.post("/logout", (req, res) => {
+    // Clear cookies & redirect to /urls which in turn redirects to /login
     req.session = null;
     res.redirect(`/urls`);
 });
