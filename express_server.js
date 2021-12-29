@@ -159,9 +159,16 @@ app.post("/register", (req, res) => {
         while (userIDexists) {
             /*
             Just in case the randomly generated user ID is already in use (astronomically unlikely)
-            the program will regenerate a different user ID
+            the program will regenerate a different user ID. It will repeat the process until it generates
+            a user ID that is not in use, at which point it will exit the loop.
             */
             newUserID = Math.round(1000000000 * Math.random());
+            userIDexists = false;
+            for (let use in users) {
+                if (users[use].id === newUserID) {
+                    userIDexists = true;
+                }
+            }
         }
 
         // Add new user to database
