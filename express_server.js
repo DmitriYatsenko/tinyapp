@@ -51,10 +51,14 @@ app.get("/urls", (req, res) => {
 });
 
 app.post("/urls", (req, res) => {
-    const longURL = req.body.longURL;
-    const shortURL = generateRandomString();
-    urlDatabase[shortURL] = { longURL: `http://${longURL}`, user_id: req.session.user_id };
-    res.redirect(`/urls/${shortURL}`);
+    if (req.session.user_id) {
+        const longURL = req.body.longURL;
+        const shortURL = generateRandomString();
+        urlDatabase[shortURL] = { longURL: `http://${longURL}`, user_id: req.session.user_id };
+        res.redirect(`/urls/${shortURL}`);
+    } else {
+        res.redirect(`/login`);
+    }
 });
 
 app.get("/urls/new", (req, res) => {
