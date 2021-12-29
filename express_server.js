@@ -113,15 +113,18 @@ app.get("/u/:shortURL", (req, res) => {
     res.redirect(longURL);
 });
 
-app.get("/urls.json", (req, res) => {
-    res.json(urlDatabase);
-});
+// app.get("/urls.json", (req, res) => {
+//     res.json(urlDatabase);
+// });
 
 app.get("/hello", (req, res) => {
     res.send("<html><body>Hello <b>World</b></body></html>\n");
 });
 
 app.get("/register", (req, res) => {
+    if (req.session.user_id) {
+        res.redirect(`/urls`);
+    }
     const templateVars = { user: users[req.session.user_id] };
     res.render("register", templateVars);
 });
@@ -131,12 +134,6 @@ app.post("/register", (req, res) => {
     let newUserEmail = req.body.email;
     let newUserPassword = req.body.password;
 
-    // let userExists = false;
-    // for (let user in users) {
-    //     if (users[user].email === newUserEmail) {
-    //         userExists = true;
-    //     }
-    // }
     if (getUserByEmail(newUserEmail, users)) {
         res.send("Email already in use");
     } else {
@@ -166,6 +163,9 @@ app.post("/register", (req, res) => {
 });
 
 app.get("/login", (req, res) => {
+    if (req.session.user_id) {
+        res.redirect(`/urls`);
+    }
     const templateVars = { user: users[req.session.user_id] };
     res.render("login", templateVars);
 });
