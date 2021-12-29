@@ -54,7 +54,7 @@ app.post("/urls", (req, res) => {
     if (req.session.user_id) {
         const longURL = req.body.longURL;
         const shortURL = generateRandomString();
-        urlDatabase[shortURL] = { longURL: `http://${longURL}`, user_id: req.session.user_id };
+        urlDatabase[shortURL] = { longURL: `${longURL}`, user_id: req.session.user_id };
         res.redirect(`/urls/${shortURL}`);
     } else {
         res.redirect(`/login`);
@@ -91,7 +91,7 @@ app.post("/urls/:shortURL", (req, res) => {
     if (req.session.user_id) {
         const shortURL = req.params.shortURL;
         const longURL = req.body.longURL;
-        urlDatabase[shortURL] = { longURL: `http://${longURL}`, user_id: req.session.user_id };
+        urlDatabase[shortURL] = { longURL: `${longURL}`, user_id: req.session.user_id };
         res.redirect(`/urls`);
     } else {
         res.redirect(`/login`);
@@ -134,7 +134,13 @@ app.post("/register", (req, res) => {
     let newUserEmail = req.body.email;
     let newUserPassword = req.body.password;
 
-    if (getUserByEmail(newUserEmail, users)) {
+    if (!newUserEmail && !newUserPassword) {
+        res.send("Email & password cannot be empty");
+    } else if (!newUserEmail) {
+        res.send("Email cannot be empty");
+    } else if (!newUserPassword) {
+        res.send("Password cannot be empty");
+    } else if (getUserByEmail(newUserEmail, users)) {
         res.send("Email already in use");
     } else {
         let userIDexists = false;
@@ -187,7 +193,7 @@ app.post("/login", (req, res) => {
         req.session.user_id = userID;
         res.redirect(`/urls`);
     } else {
-        res.send("Login in4m8n incorrect");
+        res.send("Login incorrect");
     }
 });
 
